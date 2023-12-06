@@ -21,7 +21,7 @@ from typing import Dict
 from app import utils
 from app.service import iap_request
 
-_DASHBOARD_API_HOST = 'https://datcom-data.uc.r.appspot.com'
+_DASHBOARD_API_HOST = 'https://dashboard-frontend-dot-datcom-data.uc.r.appspot.com/'
 
 _DASHBOARD_RUN_LIST = _DASHBOARD_API_HOST + '/system_runs'
 _DASHBOARD_RUN_BY_ID = _DASHBOARD_RUN_LIST + '/{run_id}'
