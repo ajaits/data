@@ -15,7 +15,26 @@
 
 import csv
 import io
+import os
+import sys
 from google.cloud import storage
+
+from absl import app
+from absl import flags
+from absl import logging
+
+_FLAGS = flags.FLAGS
+
+flags.DEFINE_string('input', 'gs://datcom-csv/usda/2017_cdqt_data.txt',
+                    'Input TXT file from https://www.nass.usda.gov/AgCensus/index.php')
+flags.DEFINE_string('output', 'agriculture.csv',
+                    'Output CSV file')
+
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(_SCRIPT_DIR)
+sys.path.append(os.path.join(_SCRIPT_DIR.split('/scripts')[0], 'util'))
+
+import file_util
 
 CSV_COLUMNS = [
     'variableMeasured',
@@ -70,13 +89,13 @@ def write_csv(reader, out, d):
             row['unit'] = 'dcs:' + value[1]
         writer.writerow(row)
 
+def main(_):
+    d = get_statvars('statvars')
+    logging.info(f'Processing input: {_FLAGS.input} to generate {_FLAGS.output}')
+    reader = csv.DictReader(file_util.FileIO(_FLAGS.input), delimiter='\t')
+    out = file_util.FileIO(_FLAGS.output, 'w', newline='')
+    write_csv(reader, out, d)
 
 if __name__ == '__main__':
-    d = get_statvars('statvars')
-    client = storage.Client()
-    bucket = client.get_bucket('datcom-csv')
-    blob = bucket.get_blob('usda/2017_cdqt_data.txt')
-    s = blob.download_as_string().decode('utf-8')
-    reader = csv.DictReader(io.StringIO(s), delimiter='\t')
-    out = open('agriculture.csv', 'w', newline='')
-    write_csv(reader, out, d)
+    app.run(main)
+
