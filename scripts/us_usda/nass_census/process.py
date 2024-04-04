@@ -25,10 +25,10 @@ from absl import logging
 
 _FLAGS = flags.FLAGS
 
-flags.DEFINE_string('input', 'gs://datcom-csv/usda/2017_cdqt_data.txt',
-                    'Input TXT file from https://www.nass.usda.gov/AgCensus/index.php')
-flags.DEFINE_string('output', 'agriculture.csv',
-                    'Output CSV file')
+flags.DEFINE_string(
+    'input', 'gs://datcom-csv/usda/2017_cdqt_data.txt',
+    'Input TXT file from https://www.nass.usda.gov/AgCensus/index.php')
+flags.DEFINE_string('output', 'agriculture.csv', 'Output CSV file')
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(_SCRIPT_DIR)
@@ -89,13 +89,16 @@ def write_csv(reader, out, d):
             row['unit'] = 'dcs:' + value[1]
         writer.writerow(row)
 
+
 def main(_):
     d = get_statvars('statvars')
-    logging.info(f'Processing input: {_FLAGS.input} to generate {_FLAGS.output}')
-    reader = csv.DictReader(file_util.FileIO(_FLAGS.input), delimiter='\t')
-    out = file_util.FileIO(_FLAGS.output, 'w', newline='')
-    write_csv(reader, out, d)
+    logging.info(
+        f'Processing input: {_FLAGS.input} to generate {_FLAGS.output}')
+    with file_util.FileIO(_FLAGS.input, 'r') as input_f:
+        reader = csv.DictReader(input_f, delimiter='\t')
+        with file_util.FileIO(_FLAGS.output, 'w', newline='') as out_f:
+            write_csv(reader, out_f, d)
+
 
 if __name__ == '__main__':
     app.run(main)
-
