@@ -397,9 +397,7 @@ class ImportExecutor:
             # Run dc import tool to generate resolved mcf.
             logging.info('Generating resolved mcf...')
             import_tool_args = [
-                f'-o={validation_output_path}',
-                'genmcf',
-                template_mcf,
+                f'-o={validation_output_path}', 'genmcf', template_mcf
             ]
             if cleaned_csv:
                 import_tool_args.extend(cleaned_csv)
