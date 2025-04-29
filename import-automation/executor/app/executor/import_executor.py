@@ -21,10 +21,10 @@ import glob
 import json
 import logging
 import os
-import shutil
 import shlex
-import sys
+import shutil
 import subprocess
+import sys
 import tempfile
 import time
 import traceback
