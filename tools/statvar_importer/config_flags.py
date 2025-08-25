@@ -155,6 +155,8 @@ flags.DEFINE_bool('generate_statvar_name', False,
                   'Generate names for Statvars.')
 flags.DEFINE_bool('llm_generate_statvar_name', False,
                   'Generate names for Statvars.')
+flags.DEFINE_bool('enable_cloud_logging', True,
+                  'Enable cloud logging when runnig on cloud')
 
 
 def get_default_config() -> dict:
